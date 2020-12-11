@@ -1,18 +1,23 @@
 if __name__ == '__main__':
-    n, m = raw_input().strip().split()
-    w = raw_input().strip().split()
-    w = [int(i) for i in w]
-    w.sort(reverse = True)
-    mongers = [0 for i in range(5000)]
-    for _ in range(int(m)):
-        x, p = raw_input().split()
-        mongers[int(p)] +=  int(x)
+    n, m = map(int, input().split())
+    w = list(map(int, input().split()))
+    w = sorted(w)
+    
+    mon_dict = dict()
+    price_list = []
+    for _ in range(m):
+        a, b = map(int, input().split())
+        mon_dict[b] = mon_dict.get(b, 0) + a
+        price_list.append(b)
+
     profit = 0
-    for f in w[:int(n)]:
-        a = len(mongers) - 1
-        while mongers[a] == 0:
-            del mongers[a]
-            a -= 1
-        profit += (len(mongers) - 1) * f
-        mongers[len(mongers) - 1] -= 1
+    price_list = sorted(price_list, reverse=True)
+    for price in price_list:
+        to_sell = mon_dict.get(price)
+        if to_sell < n:
+            profit += price * sum(w[n-to_sell:n])
+            n -= to_sell
+        else:
+            profit += price * sum(w[:n])
+            break
     print(profit)
